@@ -19,7 +19,7 @@ iNil  =  INil
 
 -- | Turn a string into an Iseq
 iStr :: String -> Iseq
-iStr s = IStr s
+iStr = IStr
 
 -- | Turn a number into an Iseq
 iNum :: Int -> Iseq
@@ -27,7 +27,7 @@ iNum n = iStr (show n)
 
 -- | Append two Iseqs
 iAppend :: Iseq -> Iseq -> Iseq
-iAppend a b  =  IAppend a b
+iAppend =  IAppend
 
 -- | Newline with indentatiion
 iNewline :: Iseq
@@ -35,7 +35,7 @@ iNewline = INewline
 
 -- | Indent an Iseq
 iIndent :: Iseq -> Iseq
-iIndent seq = IIndent seq
+iIndent = IIndent
 
 -- | Turn an Iseq into a String
 iDisplay :: Iseq -> String
@@ -47,33 +47,32 @@ genSpaces n = replicate n ' '
 
 -- "private" support function  for Iseq
 flatten :: Int -> 
-           [(IseqRep,Int)] -> 
+           [(IseqRep,Int)] ->
            String
 flatten col []  = ""
-flatten col ((INewline,indent) : seqs) = "\n" ++ (genSpaces indent) ++ flatten indent seqs
+flatten col ((INewline,indent) : seqs) = "\n" ++ genSpaces indent ++ flatten indent seqs
 flatten col ((INil,indent) : seqs) = flatten col seqs
 flatten col ((IIndent s,indent) : seqs) = flatten col ((s,col) : seqs)
-flatten col ((IStr s,indent) : seqs) = s ++ (flatten col seqs)
+flatten col ((IStr s,indent) : seqs) = s ++ flatten col seqs
 flatten col ((IAppend seq1 seq2,indent) : seqs) = flatten col ((seq1,indent) : (seq2,indent) : seqs)
 
 -- FixedWith Number	: Display a number with a fixed width
 iFWNum :: Int -> Int -> Iseq
-iFWNum width n = iStr ((genSpaces (width - (length digits))	++ digits))
+iFWNum width n = iStr (genSpaces (width - length digits)	++ digits)
   where
     digits = show n
 
 -- Layout numbered: Layout a list of Iseqs numbered with 1) 2) 3) etc
 iLayn :: [Iseq] -> Iseq
-iLayn seqs = iConcat (map lay_item (zip [1..] seqs))
+iLayn seqs = iConcat (zipWith lay_item  [1..] seqs)
   where
-    lay_item (n,seq) = iConcat [iFWNum 4 n, iStr ") ", iIndent seq, iNewline]
-
+    lay_item n seq = iConcat [iFWNum 4 n, iStr ") ", iIndent seq, iNewline]
 
 -- Define a Pretty Printer for the Core Language
 pprExpr :: CoreExpr -> Iseq
 pprExpr (ENum n)    = iStr (show n)
 pprExpr (EVar v)    = iStr v
-pprExpr (EAp e1 e2) = ((pprExpr e1) `iAppend` (iStr " ")) `iAppend` (pprAExpr e2)
+pprExpr (EAp e1 e2) = (pprExpr e1 `iAppend` iStr " ") `iAppend` pprAExpr e2
 pprExpr (ELet isrec defns expr)
   = iConcat [ iStr keyword, iNewline,
               iStr " ", iIndent (pprDefns defns), iNewline,
@@ -106,20 +105,18 @@ pprProgram  scDefs  = iInterleave sep (map pprScDef scDefs)
 pprScDef :: (String, [String], CoreExpr) -> Iseq
 pprScDef (name, vars ,expr) =
    iConcat [iStr name, iStr " ",
-   (iInterleave (iStr " ") (map iStr vars)), iStr " = ", iIndent(pprExpr expr)]
+   iInterleave (iStr " ") (map iStr vars), iStr " = ", iIndent(pprExpr expr)]
 
 pprint :: CoreProgram -> String
 pprint prog = iDisplay (pprProgram prog)
 
-
 -- support functions to for the pretty printe
 iConcat :: [Iseq] -> Iseq
-iConcat (i:is) = i `iAppend` (iConcat is)
-iConcat [] = INil
+iConcat = foldr iAppend INil
 
 iInterleave :: Iseq -> [Iseq] -> Iseq
 iInterleave ins []  = INil
 iInterleave ins [i] = i      -- no 'ins' at end of list
-iInterleave ins (i:is) = (i `iAppend`  ins) `iAppend` (iInterleave ins is)
+iInterleave ins (i:is) = (i `iAppend`  ins) `iAppend` iInterleave ins is
 
 
