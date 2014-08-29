@@ -11,7 +11,7 @@ type CoreProgram  = Program String
 
 -- | A Supercombinatordef contains the name, its arguments and its body
 type ScDefn  a   = (String, [a], Expr a)
-type CoreScDefn  = ScDefn [Char]
+type CoreScDefn  = ScDefn String
 
 -- | The base data structure for teh core language
 data Expr a = EVar String            -- Variables
@@ -40,14 +40,14 @@ recursive    = True
 nonRecursive = False
 
 bindersOf :: [(a,b)] -> [a]
-bindersOf defns = [name| (name,rhs) <- defns]
+bindersOf defns = [name | (name,rhs) <- defns]
 
 rhssOf    :: [(a,b)] -> [b]
-rhssOf  defns = [rhs|(name,rhs) <- defns]
+rhssOf  defns = [rhs | (name,rhs) <- defns]
 -- 
 
 -- | A function to find out whether we have an atomic expression
-isAtomicExpr :: (Expr a)-> Bool
+isAtomicExpr :: Expr a -> Bool
 isAtomicExpr (EVar v)   =  True
 isAtomicExpr (ENum n)   =  True
 isAtomicExpr e          =  False
