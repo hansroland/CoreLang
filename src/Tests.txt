@@ -1,0 +1,11 @@
+-- ----------------------------------------------------------------------------
+-- Tests.txt - Some simple tests for the core language
+-- ----------------------------------------------------------------------------
+--
+-- In the first version, we do these test manually in ghci
+--
+-- ----------------------------------------------------------------------------
+
+pprint preludeDefs
+
+putStrLn $ pprint preludeDefs 
