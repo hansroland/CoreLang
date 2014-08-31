@@ -11,11 +11,11 @@ import Prelude hiding(lex)
 import Data.Char
 
 -- Tokens are non-empty strings
-type Token = [Char]
+type Token = String
 
 -- lex breaks input into a sequence of small chunks
 -- eg (identifiers, numbers, symbols etc)
-lex :: [Char] -> [Token]
+lex :: String -> [Token]
 lex (c:cs)
   | isWhiteSpace c = lex cs
   | isDigit  c = num_tok : lex restnum_cs
@@ -27,13 +27,13 @@ lex (c:cs)
      restvar_cs = dropWhile isIdChar cs
 lex (a : b : cs)
    | member twoCharOps op = op : lex cs
-     where op = (a:b:[])
-lex (c: cs) = [c] : lex cs
+     where op = [a,b]
+lex (c:cs) = [c] : lex cs
 lex [] = []
 
 isWhiteSpace = member " \t\n"
 
-isIdChar c = (isLetter c) || (isDigit c)   || (c == '_')
+isIdChar c = isLetter c || isDigit c || c == '_'
 
 twoCharOps = ["==", "~=", ">=", "<=", "->"]
 
