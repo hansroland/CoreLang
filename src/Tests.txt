@@ -9,3 +9,10 @@
 pprint preludeDefs
 
 putStrLn $ pprint preludeDefs 
+
+
+-- Tests for the ParserBase
+
+pLit "hello" ["hello", "John", "!"]
+
+pOneOrMore (pLit "x") ["x", "x", "x", "x", "x", "x"]

@@ -112,7 +112,7 @@ pprint prog = iDisplay (pprProgram prog)
 
 -- support functions to for the pretty printe
 iConcat :: [Iseq] -> Iseq
-iConcat = foldr iAppend INil
+iConcat = foldr iAppend iNil
 
 iInterleave :: Iseq -> [Iseq] -> Iseq
 iInterleave ins []  = INil

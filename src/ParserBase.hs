@@ -6,12 +6,13 @@
 module ParserBase(Parser,
     pLit, pVar, pInt,
 	pAlt,
+    pApply,
 	pThen, pThen3, pThen4,
     pEmpty,
 	pOneOrMore, pZeroOrMore,
 	pOneOrMoreWithSep,
-	isInteger,
-	pApply)
+	isInteger
+	)
 
 where
 
@@ -31,7 +32,7 @@ pSat pre []     = []
 pLit :: String -> Parser String
 pLit s = pSat (== s)
 
--- |pVar - a parser for variables
+-- | pVar - a parser for variables
 pVar :: Parser String
 pVar  = pSat isVariable
     where
@@ -39,17 +40,17 @@ pVar  = pSat isVariable
       isNotKeyword x  = x `notElem` ["let", "letrec", "case", "in", "of", "Pack"]
       startWithLetter = isLetter . head
 
--- |pAlt - a parser for alternative selection
+-- | pAlt - a parser for alternative selection
 pAlt :: Parser a -> Parser a -> Parser a
 pAlt p1 p2 toks
     | null (p1 toks)   = p2 toks
     | otherwise        = p1 toks
 
---pThen - a parser for parsing 2 elements in sequence
+-- | pThen - a parser for parsing 2 elements in sequence
 pThen :: (a -> b -> c) -> Parser a -> Parser b -> Parser c
 pThen combine p1 p2 toks = [(combine v1 v2 , toks2) | (v1, toks1) <- p1 toks, (v2, toks2) <- p2 toks1]
 
--- pThen3 - a parser for parsing 3 elements in sequence
+-- | pThen3 - a parser for parsing 3 elements in sequence
 pThen3 :: (a -> b -> c -> d) -> Parser a -> Parser b -> Parser c -> Parser d
 pThen3 combine p1 p2 p3 toks = [(combine v1 v2 v3, toks3) |
           (v1, toks1) <- p1 toks,
