@@ -108,8 +108,3 @@ string2int = read
 pInt :: Parser Int
 pInt =  pApply (pSat isInteger) string2int
 
-
-      
-
-
-
