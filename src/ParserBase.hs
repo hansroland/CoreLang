@@ -1,18 +1,18 @@
 -- -----------------------------------------------------------
--- ParseBase.hs - Parser Combinators  for the Core language
---                Should be replaced with parsec library
+-- ParserBase.hs - Parser Combinators  for the Core language
+--                 Should be replaced with parsec library
 -- -----------------------------------------------------------
 
 module ParserBase(Parser,
     pLit, pVar, pInt,
-	pAlt,
+    pAlt,
     pApply,
-	pThen, pThen3, pThen4,
+    pThen, pThen3, pThen4,
     pEmpty,
-	pOneOrMore, pZeroOrMore,
-	pOneOrMoreWithSep,
-	isInteger
-	)
+    pOneOrMore, pZeroOrMore,
+    pOneOrMoreWithSep,
+    isInteger
+    )
 
 where
 
