@@ -99,12 +99,6 @@ isInteger (d: ds)
    | not (isDigit d) = False
 isInteger []   = False
 
--- Little support Function to convert string to Integer
--- (should be replaced by a standart function)
-string2int :: String -> Int
-string2int = read
-
 -- | pInt a Parser to parse an integer
 pInt :: Parser Int
-pInt =  pApply (pSat isInteger) string2int
-
+pInt =  pApply (pSat isInteger) read
