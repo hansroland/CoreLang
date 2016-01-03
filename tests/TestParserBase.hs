@@ -3,13 +3,11 @@
 -- ------------------------------------------------------------------
 module TestParserBase where
 
-
 import Test.HUnit
 import ParserBase as P
 import Lex as L
 
-
-testsParserBase = TestList 
+testsParserBase = TestList
     [ TestLabel "pLit01" pLit01
     , TestLabel "pOneOrMore" pOneOrMore01
     , TestLabel "pOneOreMoreWithSep01" pOneOrMoreWithSep01
@@ -20,6 +18,7 @@ testsParserBase = TestList
     , TestLabel "isInteger01" isInteger01
     , TestLabel "isInteger02" isInteger02
     , TestLabel "isInteger03" isInteger03
+    , TestLabel "pThen01" pThen01
     ]
 
 
@@ -62,3 +61,7 @@ isInteger02 = TestCase (assertEqual "isInteger02"
 isInteger03 = TestCase (assertEqual "isInteger02"
     False
     (isInteger "78.54"))
+
+pThen01 = TestCase (assertEqual "pThen01"
+    [(579,[])]
+    (pThen (+) pInt pInt $ L.lex "123 456"))
