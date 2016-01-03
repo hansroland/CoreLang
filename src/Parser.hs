@@ -3,7 +3,7 @@
 -- -----------------------------------------------------------
 
 module Parser(
-	syntax
+    syntax
 )
 
 where
@@ -30,19 +30,19 @@ pSc = pThen4 mkSc pVar (pZeroOrMore pVar) (pLit "=") pExpr
 
 -- | pExpr - Parser for a Core Expression
 pExpr :: Parser CoreExpr
-pExpr = pAppl 
+pExpr = pAppl
     -- `pAlt` pBinop
-    `pAlt` pLet 
+    `pAlt` pLet
     `pAlt` pLetRec
-    -- `pAlt` pCase 
-    `pAlt` pLambda 
-    `pAlt` pAExpr 
+    -- `pAlt` pCase
+    `pAlt` pLambda
+    `pAlt` pAExpr
 
 
 pAppl :: Parser CoreExpr
 pAppl = pThen EAp pExpr pAExpr
 
- 
+
 pLet = pThen4 mkLet (pLit "let") pDefns (pLit "in") pExpr
     where mkLet _ ds _ ex = ELet False ds ex
 
@@ -65,7 +65,7 @@ pAExpr = pApply pVar EVar
        `pAlt` pParenExpr
 
 
--- pConstr 
+-- pConstr
 
 pParenExpr :: Parser CoreExpr
 pParenExpr = pThen3 mkPExpr (pLit "(") pExpr (pLit ")")
