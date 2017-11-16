@@ -36,21 +36,25 @@ type CoreAlter  = Alter String
 -- Little helpers for the ELet Constructor
 type IsRec = Bool
 
+
+recursive :: Bool
 recursive    = True
+
+nonRecursive :: Bool
 nonRecursive = False
 
 bindersOf :: [(a,b)] -> [a]
-bindersOf defns = [name | (name,rhs) <- defns]
+bindersOf defns = [name | (name, _) <- defns]
 
 rhssOf    :: [(a,b)] -> [b]
-rhssOf  defns = [rhs | (name,rhs) <- defns]
+rhssOf  defns = [rhs | (_ ,rhs) <- defns]
 -- 
 
 -- | A function to find out whether we have an atomic expression
 isAtomicExpr :: Expr a -> Bool
-isAtomicExpr (EVar v)   =  True
-isAtomicExpr (ENum n)   =  True
-isAtomicExpr e          =  False
+isAtomicExpr (EVar _)   =  True
+isAtomicExpr (ENum _)   =  True
+isAtomicExpr _          =  False
 
 
 -- | Define the Standard Core Prelude

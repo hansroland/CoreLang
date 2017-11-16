@@ -24,9 +24,11 @@ executable CoreLang
                        PrettyPrinter,
                        Syntax
   -- other-extensions:
-  build-depends:       base >=4.6 && < 4.10
+  build-depends:       base >=4.6 && < 4.11
   hs-source-dirs:      src
   default-language:    Haskell2010
+  ghc-options:         -Wall
+
 
 Test-Suite hunit-tests
   type:                exitcode-stdio-1.0
@@ -35,8 +37,9 @@ Test-Suite hunit-tests
                        Lex,
                        ParserBase
   -- other-extensions:    OverloadedStrings
-  build-depends:       base >= 4.6 && < 4.9, 
+  build-depends:       base >= 4.6 && < 4.11, 
                        HUnit >= 1.2.5.0
   hs-source-dirs:      tests,
                        src
   default-language:    Haskell2010
+  ghc-options:         -Wall

@@ -39,7 +39,7 @@ iIndent = IIndent
 
 -- | Turn an Iseq into a String
 iDisplay :: Iseq -> String
-iDisplay seq = flatten 0 [(seq,0)]
+iDisplay iseq = flatten 0 [(iseq,0)]
 
 -- | spaces : return a string with a numer of spaces
 genSpaces :: Int -> String
@@ -49,16 +49,18 @@ genSpaces n = replicate n ' '
 flatten :: Int -> 
            [(IseqRep,Int)] ->
            String
-flatten col []  = ""
-flatten col ((INewline,indent) : seqs) = "\n" ++ genSpaces indent ++ flatten indent seqs
-flatten col ((INil,indent) : seqs) = flatten col seqs
-flatten col ((IIndent s,indent) : seqs) = flatten col ((s,col) : seqs)
-flatten col ((IStr s,indent) : seqs) = s ++ flatten col seqs
+flatten _    []  = ""
+flatten _   ((INewline,indent) : seqs) = "\n" ++ genSpaces indent ++ flatten indent seqs
+flatten col ((INil, _) : seqs) = flatten col seqs
+flatten col ((IIndent s, _) : seqs) = flatten col ((s,col) : seqs)
+flatten col ((IStr s, _) : seqs) = s ++ flatten col seqs
 flatten col ((IAppend seq1 seq2,indent) : seqs) = flatten col ((seq1,indent) : (seq2,indent) : seqs)
 
+
+{-  These 2 functions will be used later
 -- FixedWith Number	: Display a number with a fixed width
 iFWNum :: Int -> Int -> Iseq
-iFWNum width n = iStr (genSpaces (width - length digits)	++ digits)
+iFWNum width n = iStr (genSpaces (width - length digits) ++ digits)
   where
     digits = show n
 
@@ -66,21 +68,27 @@ iFWNum width n = iStr (genSpaces (width - length digits)	++ digits)
 iLayn :: [Iseq] -> Iseq
 iLayn seqs = iConcat (zipWith lay_item  [1..] seqs)
   where
-    lay_item n seq = iConcat [iFWNum 4 n, iStr ") ", iIndent seq, iNewline]
+    lay_item n iseq = iConcat [iFWNum 4 n, iStr ") ", iIndent iseq, iNewline]
+
+-}
 
 -- Define a Pretty Printer for the Core Language
 pprExpr :: CoreExpr -> Iseq
-pprExpr (ENum n)    = iStr (show n)
+pprExpr (ENum n)    = iNum n
 pprExpr (EVar v)    = iStr v
 pprExpr (EAp e1 e2) = (pprExpr e1 `iAppend` iStr " ") `iAppend` pprAExpr e2
 pprExpr (ELet isrec defns expr)
   = iConcat [ iStr keyword, iNewline,
               iStr " ", iIndent (pprDefns defns), iNewline,
               iStr "in ", pprExpr expr]
-  where
+ where
   keyword
      | isrec     = "letrec"
      | otherwise = "let"
+pprExpr (EConstr _ _) = iStr "PrettyPrinter.hs - EConstr not yet implemented"
+pprExpr (ECase _ _ )  = iStr "PrettyPrinter.hs - ECase not yet implemented"
+pprExpr (ELam _ _ )   = iStr "PrettyPrinter.hs - ELam not yet implemented"
+
 
 pprAExpr :: CoreExpr -> Iseq
 pprAExpr e
@@ -115,8 +123,6 @@ iConcat :: [Iseq] -> Iseq
 iConcat = foldr iAppend iNil
 
 iInterleave :: Iseq -> [Iseq] -> Iseq
-iInterleave ins []  = INil
-iInterleave ins [i] = i      -- no 'ins' at end of list
+iInterleave _   []  = INil
+iInterleave _   [i] = i      -- no 'ins' at end of list
 iInterleave ins (i:is) = (i `iAppend`  ins) `iAppend` iInterleave ins is
-
-

@@ -31,10 +31,13 @@ lex (a : b : cs)
 lex (c:cs) = [c] : lex cs
 lex [] = []
 
+isWhiteSpace :: Char -> Bool
 isWhiteSpace = member " \t\n"
 
+isIdChar :: Char -> Bool
 isIdChar c = isLetter c || isDigit c || c == '_'
 
+twoCharOps :: [String]
 twoCharOps = ["==", "~=", ">=", "<=", "->"]
 
 -- member : use elem
@@ -43,7 +46,7 @@ member :: Eq a => [a] -> a -> Bool
 member (c:cs) x
    | c == x  = True
    |otherwise = member cs x
-member [] x = False
+member [] _ = False
 
 
 

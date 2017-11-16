@@ -23,10 +23,10 @@ type Parser a = [Token] -> [(a, [Token])]
 
 -- | Support Function to allow more modulare definitions of pLit and pVar
 pSat :: (String -> Bool) -> Parser String
-pSat pred  (tok : toks)
-    | pred tok  = [(tok, toks)]
-    |otherwise  = []
-pSat pre []     = []
+pSat predi  (tok : toks)
+    | predi tok  = [(tok, toks)]
+    | otherwise  = []
+pSat _ []     = []
 
 -- | pLit - a parser for literals
 pLit :: String -> Parser String
@@ -81,7 +81,7 @@ pOneOrMoreWithSep :: Parser a -> Parser b -> Parser [a]
 pOneOrMoreWithSep p1 pSep = pThen (:) p1 (pZeroOrMore pSepAndItem)
     where
       pSepAndItem = pThen retSecond pSep p1
-      retSecond x y  = y
+      retSecond _ y  = y
 
 -- | Parser Manipulation function. It takes a parser and a function and applies
 --   the function to the values returned by the parser
@@ -96,7 +96,7 @@ isInteger :: String -> Bool
 isInteger (d: ds)
    | isDigit d && null ds = True
    | isDigit d = isInteger ds
-   | not (isDigit d) = False
+   | otherwise = False
 isInteger []   = False
 
 -- | pInt a Parser to parse an integer
