@@ -40,7 +40,7 @@ pExpr = pAppl
 
 
 pAppl :: Parser CoreExpr
-pAppl = pThen EAp pExpr pAExpr
+pAppl = (pOneOrMore pAExpr) `pApply` mk_ap_chain 
 
 pLet :: Parser (Expr String)
 pLet = pThen4 mkLet (pLit "let") pDefns (pLit "in") pExpr
@@ -73,3 +73,8 @@ pAExpr = pApply pVar EVar
 pParenExpr :: Parser CoreExpr
 pParenExpr = pThen3 mkPExpr (pLit "(") pExpr (pLit ")")
     where mkPExpr _ ex _ = ex
+
+-- | Add Eap's between a list of functions / variables
+mk_ap_chain :: [CoreExpr] -> CoreExpr
+mk_ap_chain exps = foldl EAp (head exps) (tail exps)
+    

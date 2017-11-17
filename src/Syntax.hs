@@ -25,7 +25,8 @@ data Expr a = EVar String            -- Variables
             | ECase                  -- Case expression
               (Expr a)               --   Expression to scruntinise
               [Alter a]              --   Alternatives
-            | ELam [String] (Expr a) -- Lambda abstraction 
+            | ELam [String] (Expr a) -- Lambda abstraction
+    deriving (Show) 
 
 type CoreExpr   = Expr String
 
