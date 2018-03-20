@@ -52,7 +52,7 @@ flatten :: Int ->
 flatten _    []  = ""
 flatten _   ((INewline,indent) : seqs) = "\n" ++ genSpaces indent ++ flatten indent seqs
 flatten col ((INil, _) : seqs) = flatten col seqs
-flatten col ((IIndent s, _) : seqs) = flatten col ((s,col) : seqs)
+flatten col ((IIndent s, _) : seqs) = flatten col ((s,col + 2) : seqs)
 flatten col ((IStr s, _) : seqs) = s ++ flatten col seqs
 flatten col ((IAppend seq1 seq2,indent) : seqs) = flatten col ((seq1,indent) : (seq2,indent) : seqs)
 
@@ -79,8 +79,8 @@ pprExpr (EVar v)    = iStr v
 pprExpr (EAp e1 e2) = (pprExpr e1 `iAppend` iStr " ") `iAppend` pprAExpr e2
 pprExpr (ELet isrec defns expr)
   = iConcat [ iStr keyword, iNewline,
-              iStr " ", iIndent (pprDefns defns), iNewline,
-              iStr "in ", pprExpr expr]
+              iIndent (pprDefns defns), iNewline,
+              iIndent (iStr "in "), pprExpr expr]
  where
   keyword
      | isrec     = "letrec"

@@ -11,7 +11,7 @@ import PrettyPrinter
 
 main :: IO()
 main = do
-       print $ pprint $ syntax $ lex coreprog02
+    putStrLn $ pprint $ syntax $ lex coreprog02
 
 
 coreprog01 :: String
