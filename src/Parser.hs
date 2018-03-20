@@ -38,7 +38,7 @@ pExpr = pAppl
     `pAlt` pLambda
     `pAlt` pAExpr
 
-
+    
 pAppl :: Parser CoreExpr
 pAppl = (pOneOrMore pAExpr) `pApply` mk_ap_chain 
 
@@ -47,12 +47,12 @@ pLet = pThen4 mkLet (pLit "let") pDefns (pLit "in") pExpr
     where mkLet _ ds _ ex = ELet False ds ex
 
 pLetRec :: Parser (Expr String)
-pLetRec = pThen4 mkLetRec (pLit "let") pDefns (pLit "in") pExpr
+pLetRec = pThen4 mkLetRec (pLit "letrec") pDefns (pLit "in") pExpr
     where mkLetRec _ ds _ ex = ELet True ds ex
 
 -- | Subdefinitions for pLet and pLetRec
 pDefns :: Parser [(String, CoreExpr)]
-pDefns = pOneOrMoreWithSep pDefn (pLit ";")
+pDefns = pThen const (pOneOrMore pDefn) (pLit ";")
 
 pDefn :: Parser (String, CoreExpr)
 pDefn = pThen3 mkDef pVar (pLit "=") pExpr
@@ -68,6 +68,7 @@ pAExpr = pApply pVar EVar
        -- `pAlt` pConstr
        `pAlt` pParenExpr
 
+
 -- pConstr
 
 pParenExpr :: Parser CoreExpr
@@ -77,4 +78,5 @@ pParenExpr = pThen3 mkPExpr (pLit "(") pExpr (pLit ")")
 -- | Add Eap's between a list of functions / variables
 mk_ap_chain :: [CoreExpr] -> CoreExpr
 mk_ap_chain exps = foldl EAp (head exps) (tail exps)
+
     
