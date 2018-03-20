@@ -1,5 +1,5 @@
 -- ------------------------------------------------------------------
--- Tests to the ParserBase moule
+-- Tests to the ParserBase module
 -- ------------------------------------------------------------------
 module TestParserBase where
 
@@ -20,6 +20,9 @@ testsParserBase = TestList
     , TestLabel "isInteger02" isInteger02
     , TestLabel "isInteger03" isInteger03
     , TestLabel "pThen01" pThen01
+    , TestLabel "pThen02" pThen02
+    , TestLabel "pThen03" pThen03
+    , TestLabel "pThen04" pThen04
     ]
 
 pLit01 :: Test
@@ -76,3 +79,25 @@ pThen01 :: Test
 pThen01 = TestCase (assertEqual "pThen01"
     [(579,[])]
     (pThen (+) pInt pInt $ L.lex "123 456"))
+
+pThen02 :: Test 
+pThen02 = TestCase (assertEqual "pThen02"
+    [( 60, [])]
+    (pThen3 add3 pInt pInt pInt $ L.lex "10 20 30"))
+      where 
+        add3 a b c = a + b + c
+
+pThen03 :: Test 
+pThen03 = TestCase (assertEqual "pThen03"
+    [( 100, [])]
+    (pThen4 add4 pInt pInt pInt pInt $ L.lex "10 20 30 40"))
+      where 
+        add4 a b c d = a + b + c + d
+
+pThen04 = TestCase (assertEqual "pThen04"
+    [(("name",["p1","p2"],10),[])]
+    (pThen4 mkSc pVar (pZeroOrMore pVar) (pLit "=") pInt  $ L.lex "name p1 p2 = 10"))
+      where
+        mkSc func parms _ n  = (func, parms, n)
+
+
