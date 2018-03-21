@@ -25,3 +25,6 @@ coreprog10 = "main = letrec f = f x; in f"
 
 coreprog11 :: String 
 coreprog11 = "main = let id1 = I I I; in id1 id1 3"
+
+coreprog99 :: String 
+coreprog99 = "main = double 21; double a = a + a"

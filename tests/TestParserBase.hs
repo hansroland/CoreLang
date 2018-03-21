@@ -94,6 +94,7 @@ pThen03 = TestCase (assertEqual "pThen03"
       where 
         add4 a b c d = a + b + c + d
 
+pThen04 :: Test
 pThen04 = TestCase (assertEqual "pThen04"
     [(("name",["p1","p2"],10),[])]
     (pThen4 mkSc pVar (pZeroOrMore pVar) (pLit "=") pInt  $ L.lex "name p1 p2 = 10"))

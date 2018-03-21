@@ -5,6 +5,7 @@
 
 module ParserBase(Parser,
     pLit, pVar, pInt,
+    pSat,
     pAlt,
     pApply,
     pThen, pThen3, pThen4,
