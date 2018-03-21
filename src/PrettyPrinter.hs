@@ -85,9 +85,9 @@ pprExpr (ELet isrec defns expr)
   keyword
      | isrec     = "letrec"
      | otherwise = "let"
+pprExpr (ELam vars expr) = iStr "\\ " `iAppend` iInterleave (iStr " ") (map iStr vars) `iAppend` iStr " . " `iAppend` pprExpr expr
 pprExpr (EConstr _ _) = iStr "PrettyPrinter.hs - EConstr not yet implemented"
 pprExpr (ECase _ _ )  = iStr "PrettyPrinter.hs - ECase not yet implemented"
-pprExpr (ELam _ _ )   = iStr "PrettyPrinter.hs - ELam not yet implemented"
 
 
 pprAExpr :: CoreExpr -> Iseq

@@ -26,5 +26,8 @@ coreprog10 = "main = letrec f = f x; in f"
 coreprog11 :: String 
 coreprog11 = "main = let id1 = I I I; in id1 id1 3"
 
-coreprog99 :: String 
-coreprog99 = "main = double 21; double a = a + a"
+coreprog20 :: String 
+coreprog20 = "main = double 21; double a = a + a"
+
+coreprog21 :: String 
+coreprog21 = "main = double_list 6; double_list xs = map (\\ x. 2*x) xs"
