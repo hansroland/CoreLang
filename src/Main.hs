@@ -31,3 +31,6 @@ coreprog20 = "main = double 21; double a = a + a"
 
 coreprog21 :: String 
 coreprog21 = "main = double_list 6; double_list xs = map (\\ x. 2*x) xs"
+
+coreprog22 :: String 
+coreprog22 = "main = Pack{7,2} (Pack{6,1} 3) (Pack{6,1} 4)"

@@ -62,11 +62,13 @@ pLambda = pThen4 mkLambda (pLit "\\") (pOneOrMore pVar) (pLit ".") pExpr
 pAExpr :: Parser CoreExpr
 pAExpr = pApply pVar EVar
        `pAlt` pApply pInt ENum
-       -- `pAlt` pConstr
+       `pAlt` pConstr
        `pAlt` pParenExpr
 
-
--- pConstr
+-- | Parse a constructor: "Pack{tag,arity}""
+pConstr :: Parser CoreExpr
+pConstr = pThen6 mkConstr (pLit "Pack") (pLit "{") pInt (pLit ",") pInt (pLit "}") 
+  where mkConstr _ _ tag _ arity _ = EConstr tag arity
 
 pParenExpr :: Parser CoreExpr
 pParenExpr = pThen3 mkPExpr (pLit "(") pExpr (pLit ")")

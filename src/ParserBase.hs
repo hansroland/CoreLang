@@ -8,7 +8,7 @@ module ParserBase(Parser,
     pSat,
     pAlt,
     pApply,
-    pThen, pThen3, pThen4,
+    pThen, pThen3, pThen4, pThen5, pThen6,
     pEmpty,
     pOneOrMore, pZeroOrMore,
     pOneOrMoreWithSep,
@@ -58,7 +58,7 @@ pThen3 combine p1 p2 p3 toks = [(combine v1 v2 v3, toks3) |
           (v2, toks2) <- p2 toks1,
           (v3, toks3) <- p3 toks2]
 
--- pThen4 - a parser for parsing 4 elements in sequence
+-- | pThen4 - a parser for parsing 4 elements in sequence
 pThen4 :: (a -> b -> c -> d -> e) -> Parser a -> Parser b -> Parser c -> Parser d -> Parser e
 pThen4 combine p1 p2 p3 p4 toks = [(combine v1 v2 v3 v4, toks4) |
           (v1, toks1) <- p1 toks,
@@ -66,6 +66,26 @@ pThen4 combine p1 p2 p3 p4 toks = [(combine v1 v2 v3 v4, toks4) |
           (v3, toks3) <- p3 toks2,
           (v4, toks4) <- p4 toks3]
 
+-- | pThen5 - a parser for parsing 5 elements in sequence
+pThen5 :: (a -> b -> c -> d -> e -> f) -> Parser a -> Parser b -> Parser c -> 
+    Parser d -> Parser e -> Parser f
+pThen5 combine p1 p2 p3 p4 p5 toks = [(combine v1 v2 v3 v4 v5, toks5) |
+          (v1, toks1) <- p1 toks,
+          (v2, toks2) <- p2 toks1,
+          (v3, toks3) <- p3 toks2,
+          (v4, toks4) <- p4 toks3,
+          (v5, toks5) <- p5 toks4]
+
+-- | pThen6 - a parser for parsing 6 elements in sequence
+pThen6 :: (a -> b -> c -> d -> e -> f -> g) -> Parser a -> Parser b -> Parser c -> 
+    Parser d -> Parser e -> Parser f -> Parser g
+pThen6 combine p1 p2 p3 p4 p5 p6 toks = [(combine v1 v2 v3 v4 v5 v6, toks6) |
+          (v1, toks1) <- p1 toks,
+          (v2, toks2) <- p2 toks1,
+          (v3, toks3) <- p3 toks2,
+          (v4, toks4) <- p4 toks3,
+          (v5, toks5) <- p5 toks4,
+          (v6, toks6) <- p6 toks5]
 
 pEmpty :: a -> Parser a
 pEmpty x toks = [(x,toks)]

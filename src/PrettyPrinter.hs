@@ -86,7 +86,7 @@ pprExpr (ELet isrec defns expr)
      | isrec     = "letrec"
      | otherwise = "let"
 pprExpr (ELam vars expr) = iStr "\\ " `iAppend` iInterleave (iStr " ") (map iStr vars) `iAppend` iStr " . " `iAppend` pprExpr expr
-pprExpr (EConstr _ _) = iStr "PrettyPrinter.hs - EConstr not yet implemented"
+pprExpr (EConstr tag arity) = iConcat [ iStr "Pack{", iNum tag, iStr ",", iNum arity, iStr "}" ]
 pprExpr (ECase _ _ )  = iStr "PrettyPrinter.hs - ECase not yet implemented"
 
 
