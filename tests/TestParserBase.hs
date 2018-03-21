@@ -100,5 +100,3 @@ pThen04 = TestCase (assertEqual "pThen04"
     (pThen4 mkSc pVar (pZeroOrMore pVar) (pLit "=") pInt  $ L.lex "name p1 p2 = 10"))
       where
         mkSc func parms _ n  = (func, parms, n)
-
-

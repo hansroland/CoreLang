@@ -11,7 +11,6 @@ where
 import Lex
 import ParserBase
 import Syntax
---import Data.Char
 
 syntax :: [Token] -> CoreProgram
 syntax = takeFirstParse . pProgram
@@ -40,11 +39,11 @@ pExpr = pLet
 pAppl :: Parser CoreExpr
 pAppl = (pOneOrMore pAExpr) `pApply` mk_ap_chain 
 
-pLet :: Parser (Expr String)
+pLet :: Parser CoreExpr
 pLet = pThen4 mkLet (pLit "let") pDefns (pLit "in") pExpr
     where mkLet _ ds _ ex = ELet False ds ex
 
-pLetRec :: Parser (Expr String)
+pLetRec :: Parser CoreExpr
 pLetRec = pThen4 mkLetRec (pLit "letrec") pDefns (pLit "in") pExpr
     where mkLetRec _ ds _ ex = ELet True ds ex
 
@@ -56,11 +55,11 @@ pDefn :: Parser (String, CoreExpr)
 pDefn = pThen3 mkDef pVar (pLit "=") pExpr
    where mkDef v _ ex = (v,ex)
 
-pLambda :: Parser (Expr String)
+pLambda :: Parser CoreExpr
 pLambda = pThen4 mkLambda (pLit "\\") (pOneOrMore pVar) (pLit ".") pExpr
    where mkLambda _ b _ = ELam b
 
-pAExpr :: Parser (Expr String)
+pAExpr :: Parser CoreExpr
 pAExpr = pApply pVar EVar
        `pAlt` pApply pInt ENum
        -- `pAlt` pConstr
@@ -113,7 +112,7 @@ pExpr5c = (pThen FoundOp (pLit "*") pExpr5) `pAlt` (pThen FoundOp (pLit "/") pEx
 pExpr6 :: Parser CoreExpr
 pExpr6 =  pAppl
 
-assembleOp :: Expr String -> PartialExpr -> Expr String
+assembleOp :: CoreExpr -> PartialExpr -> CoreExpr
 assembleOp e1 NoOp = e1
 assembleOp e1 (FoundOp op e2) = EAp (EAp (EVar op) e1) e2
 
