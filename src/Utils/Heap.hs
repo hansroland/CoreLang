@@ -5,6 +5,7 @@
 
 module Utils.Heap 
    (Heap
+   , Addr
    , hInitial
    , hAlloc
    , hUpdate
@@ -24,7 +25,7 @@ hInitial :: Heap a
 hInitial = Heap 0 [1..] []
 
 -- | Add a new element to the heap
--- Add the new elemten at the beginning of the list, and remove the address
+-- Add the new element at the beginning of the list, and remove the address
 hAlloc :: Heap a -> a -> (Heap a, Addr)
 hAlloc (Heap size (next : free) xs) x =
 	   (Heap (size + 1) free  ((next, x) : xs), next)
@@ -38,7 +39,6 @@ hUpdate (Heap size free xs) a x  =
 hFree :: Heap a -> Addr -> Heap a
 hFree (Heap size free xs) a = Heap (size - 1) (a:free) (remove xs a)
 
-
 -- | Helper function remove
 remove :: [(Int, a)] -> Int -> [(Int, a)]
 remove [] adr = error ("Heap.remove - Attemot to update or free nonexistent address"
@@ -49,7 +49,7 @@ remove ((a, x) : xs) adr
 
 -- Additional Functions
 
--- | Return the nubmer of elements in our heap
+-- | Return the number of elements in our heap
 hSize :: Heap a -> Int
 hSize (Heap size free xs) = size
 
