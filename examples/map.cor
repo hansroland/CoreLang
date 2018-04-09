@@ -1,0 +1,1 @@
+main = double_list 6; double_list xs = map (\ x. 2*x) xs

@@ -3,15 +3,21 @@
 -- -----------------------------------------------------------
 
 module Parser(
-    syntax
+    parse
 )
 
 where
 
+import Prelude hiding (lex)
 import Lex
 import ParserBase
 import Syntax
 
+-- | parse
+parse :: String -> CoreProgram 
+parse = syntax . lex
+
+-- | syntax- analyze the lexer tokens and build a CodeProgram data structure
 syntax :: [Token] -> CoreProgram
 syntax = takeFirstParse . pProgram
     where

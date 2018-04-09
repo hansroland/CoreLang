@@ -1,0 +1,1 @@
+main = Pack{7,2} (Pack{6,1} 3) (Pack{6,1} 4)

@@ -1,3 +1,3 @@
-infinite x = letrec cs = const x xs
+infinite x = letrec cs = const x xs;
               in xs ;
 main = hd (tl (tl (infinite 4)))
