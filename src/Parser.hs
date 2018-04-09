@@ -32,7 +32,7 @@ pSc = pThen4 mkSc pVar (pZeroOrMore pVar) (pLit "=") pExpr
 pExpr :: Parser CoreExpr
 pExpr = pLet
     `pAlt` pLetRec
-    -- `pAlt` pCase
+    `pAlt` pCase
     `pAlt` pLambda
     `pAlt` pExpr1
 
@@ -54,6 +54,18 @@ pDefns = pThen const (pOneOrMore pDefn) (pLit ";")
 pDefn :: Parser (String, CoreExpr)
 pDefn = pThen3 mkDef pVar (pLit "=") pExpr
    where mkDef v _ ex = (v,ex)
+
+pCase :: Parser CoreExpr 
+pCase = pThen4 mkCase (pLit "case") pExpr (pLit "of") pCases
+
+pCases :: Parser [CoreAlter]
+pCases = pOneOrMoreWithSep (pThen6 mkAlt (pLit "<") pInt (pLit ">") (pZeroOrMore pVar) (pLit "->") pExpr) (pLit ";")
+
+mkCase :: String -> CoreExpr -> String -> [CoreAlter] -> CoreExpr
+mkCase _ guard _ alts = ECase guard alts
+
+mkAlt :: String -> Int -> String -> [String] -> String -> CoreExpr -> CoreAlter
+mkAlt _ tag _ vars _ expr = (tag, vars, expr)
 
 pLambda :: Parser CoreExpr
 pLambda = pThen4 mkLambda (pLit "\\") (pOneOrMore pVar) (pLit ".") pExpr

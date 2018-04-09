@@ -34,3 +34,6 @@ coreprog21 = "main = double_list 6; double_list xs = map (\\ x. 2*x) xs"
 
 coreprog22 :: String 
 coreprog22 = "main = Pack{7,2} (Pack{6,1} 3) (Pack{6,1} 4)"
+
+coreprog23 :: String 
+coreprog23 = "main = isRed 1; isRed c = case c of <1> -> True; <2> -> False; <3> -> False"
