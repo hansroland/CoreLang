@@ -7,6 +7,7 @@
 import Parser
 import PrettyPrintSyntax
 import System.Environment
+import Template
 
 main :: IO ()
 main = do 
@@ -22,5 +23,5 @@ run fn = do
     let prog = parse inp 
     putStrLn "Program:"
     putStrLn $ pprint prog 
-    -- putStrLn "Result:"
-    -- putStrln $ showResults . eval . compile
+    putStrLn "Results:"
+    putStrLn $ showResults $ eval $ compile prog

@@ -23,7 +23,8 @@ executable CoreLang
                        ParserBase,
                        PrettyPrintBase,
                        PrettyPrintSyntax,
-                       Syntax
+                       Syntax,
+                       Template
   -- other-extensions:
   build-depends:       base >=4.6 && < 4.11
   hs-source-dirs:      src

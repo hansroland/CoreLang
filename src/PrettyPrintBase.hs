@@ -53,8 +53,6 @@ flatten col ((IIndent s, _) : seqs) = flatten col ((s,col + 2) : seqs)
 flatten col ((IStr s, _) : seqs) = s ++ flatten col seqs
 flatten col ((IAppend seq1 seq2,indent) : seqs) = flatten col ((seq1,indent) : (seq2,indent) : seqs)
 
-
-{-  These 2 functions will be used later
 -- FixedWith Number	: Display a number with a fixed width
 iFWNum :: Int -> Int -> Iseq
 iFWNum width n = iStr (genSpaces (width - length digits) ++ digits)
@@ -66,8 +64,6 @@ iLayn :: [Iseq] -> Iseq
 iLayn seqs = iConcat (zipWith lay_item  [1..] seqs)
   where
     lay_item n iseq = iConcat [iFWNum 4 n, iStr ") ", iIndent iseq, iNewline]
-
--}
 
 -- support functions to for the pretty printer
 iConcat :: [Iseq] -> Iseq

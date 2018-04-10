@@ -9,7 +9,10 @@ module Utils.Heap
    , hInitial
    , hAlloc
    , hUpdate
-   , hFree)
+   , hSize
+   , hFree
+   , hAddresses
+   , hLookup)
    where
 
 import Utils.Assoc
@@ -27,13 +30,12 @@ hInitial = Heap 0 [1..] []
 -- | Add a new element to the heap
 -- Add the new element at the beginning of the list, and remove the address
 hAlloc :: Heap a -> a -> (Heap a, Addr)
-hAlloc (Heap size (next : free) xs) x =
-	   (Heap (size + 1) free  ((next, x) : xs), next)
+hAlloc (Heap size (next : free) xs) x =  (Heap (size + 1) free  ((next, x) : xs), next)
+hAlloc (Heap _ [] _) _ = error "Heap.hs:hAlloc - Empty free list"
  
 -- | Update an element added earlier to the heap
 hUpdate :: Heap a -> Addr -> a -> Heap a
-hUpdate (Heap size free xs) a x  =
-         Heap size free ((a,x) : remove xs a) 
+hUpdate (Heap size free xs) a x  = Heap size free ((a,x) : remove xs a) 
 
 -- | Remove an address from the Heap
 hFree :: Heap a -> Addr -> Heap a
@@ -51,13 +53,12 @@ remove ((a, x) : xs) adr
 
 -- | Return the number of elements in our heap
 hSize :: Heap a -> Int
-hSize (Heap size free xs) = size
+hSize (Heap size _ _) = size
 
 -- | Return all addresses with data stored in our heap
 hAddresses :: Heap a -> [Addr]
-hAddresses (Heap size free xs) = [addr | (addr, node) <- xs]
+hAddresses (Heap _ _ xs) = [addr | (addr, _) <- xs]
 
 -- | Loopkup an element with its address
 hLookup :: Heap a -> Addr -> a 
-hLookup (Heap size free xs) a 
-    = aLookup xs a (error ("Heap.hLokup - can't find address " ++ show a))
+hLookup (Heap _ _ xs) a = aLookup xs a (error ("Heap.hLokup - can't find address " ++ show a))
