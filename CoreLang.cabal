@@ -21,7 +21,8 @@ executable CoreLang
   other-modules:       Lex,
                        Parser,
                        ParserBase,
-                       PrettyPrinter,
+                       PrettyPrintBase,
+                       PrettyPrintSyntax,
                        Syntax
   -- other-extensions:
   build-depends:       base >=4.6 && < 4.11

@@ -5,7 +5,7 @@
 -- A preliminary main program
 
 import Parser
-import PrettyPrinter
+import PrettyPrintSyntax
 import System.Environment
 
 main :: IO ()
