@@ -92,13 +92,17 @@ apStep :: TiState -> Addr -> Addr -> TiState
 apStep (stack, dump, heap, globals, stats) a1 _ = (a1 : stack, dump, heap, globals, stats)
 
 scStep :: TiState -> String -> [String] -> CoreExpr -> TiState
-scStep (stack, dump, heap, globals, stats) _ argNames body
+scStep (stack, dump, heap, globals, stats) sc argNames body
      = (new_stack, dump, new_heap, globals, stats)
   where
     new_stack = result_addr : (drop (length argNames+1) stack)
     (new_heap, result_addr) = instantiate body heap env
     env = arg_bindings ++ globals
-    arg_bindings = zip argNames (getArgs heap stack)
+    stackArgs = getArgs heap stack
+    arg_bindings 
+      | length stackArgs >= (length argNames) = zip argNames stackArgs
+      | otherwise = error $ "Not enough arguments for function " ++ sc
+      
 
 getArgs :: TiHeap -> TiStack -> [Addr]
 getArgs heap (_ : stack) = map getArg stack
