@@ -10,7 +10,7 @@ module Template
 import Utils.Heap
 import Utils.Assoc
 import Syntax
-import Data.List (mapAccumL)
+import Data.List (mapAccumL, sort)
 import PrettyPrintBase
 
 -- | The State of our machine 
@@ -149,13 +149,14 @@ showStack heap stack = iConcat [
 
 showStkNode :: TiHeap -> Node -> Iseq 
 showStkNode heap (NAp funAddr argAddr) = 
-    iConcat [iStr "NAp ", showFWAddr funAddr, 
-             iStr " ", showFWAddr argAddr, iStr " (", 
-             showNode (hLookup heap argAddr), iStr ")"]
+    iConcat [iStr "NAp ", showFWAddr funAddr, showDetail funAddr, 
+             iStr " ", showFWAddr argAddr, showDetail argAddr]
+  where 
+    showDetail addr = iConcat [ iStr " (", showNode (hLookup heap addr), iStr ")"]
 showStkNode _ node = showNode node
   
 showNode :: Node -> Iseq 
-showNode (NAp a1 a2) = iConcat [iStr "NAp", showAddr a1, iStr " ", showAddr a2] 
+showNode (NAp a1 a2) = iConcat [iStr "NAp ", showAddr a1, iStr " ", showAddr a2] 
 showNode (NSupercomb name _ _) = iStr ("NSupercomb " ++ name) 
 showNode (NNum n) = (iStr "NNum ") `iAppend` (iNum n)
 
@@ -168,10 +169,20 @@ showFWAddr addr = iStr (genSpaces (4 - length str) ++ str)
     str = show addr
 
 showStats :: TiState -> Iseq 
-showStats (_, _, _, _, stats) = 
-    iConcat [iNewline, iNewline, iStr "Total number of steps = ",
-             iNum (tiStatGetSteps stats)]
+showStats (_, _, heap, _, stats) = 
+    iConcat [iStr "Total number of steps = ",
+             iNum (tiStatGetSteps stats),
+             iNewline, iNewline,
+             showHeap heap]
 
+-- | Print out the contents of the heap
+showHeap :: TiHeap -> Iseq
+showHeap heap = iConcat [iStr "Heap:",
+    iIndent (iConcat (map showHeapAddr addrs))]
+  where 
+    addrs = sort $ hAddresses heap
+    showHeapAddr addr = iConcat [iNewline, iNum addr, iStr " ", showNode (hLookup heap addr)]
+      
 -- Helper Functions for TiStats 
 
 tiStatInitial :: TiStats 

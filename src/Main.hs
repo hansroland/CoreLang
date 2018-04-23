@@ -9,6 +9,8 @@ import PrettyPrintSyntax
 import System.Environment
 import Template
 
+-- | GHCi example:
+-- :main example/b111.cor
 main :: IO ()
 main = do 
     args <- getArgs
@@ -22,6 +24,7 @@ run fn = do
     inp <- readFile fn 
     let prog = parse inp 
     putStrLn "Program:"
-    putStrLn $ pprint prog 
+    putStrLn $ pprint prog
+    putStrLn " " 
     putStrLn "Results:"
     putStrLn $ showResults $ eval $ compile prog
