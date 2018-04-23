@@ -122,11 +122,13 @@ instantiate (ELet isrec defs body) heap env = instantiateLet isrec defs body hea
 instantiate (ECase _ _) _ _ = error "Can't instantiate case exprs"
 instantiate (ELam _ _ ) _ _ = error "Can't instantiate lambda exprs"
 
-instantiateConstr :: p1 -> p2 -> p3 -> p4 -> a
-instantiateConstr tag arity heap env = error "Can't instantiate construtors yet"
+instantiateConstr :: p1 -> p2 -> p3 -> p4 -> a 
+-- instantiateConstr tag arity heap env = undefined
+instantiateConstr _ _ _ _ = error "Can't instantiate construtors yet"
 
 instantiateLet :: p1 -> p2 -> p3 -> p4 -> p5 -> a
-instantiateLet isrec defs body heap env = error "Can't instantiate let(rec)s yet"
+-- instantiateLet isrec defs body heap env = undefined
+instantiateLet _ _ _ _ _ = error "Can't instantiate let(rec)s yet"
 
 -- | Show results
 showResults :: [TiState] -> String
