@@ -1,5 +1,10 @@
 ### Code to the book "Implementing Functional Languages" 
 
+[![Build Status][build-badge]][build-result]
+
+[build-badge]: https://travis-ci.org/hansroland/CoreLang.svg?branch=master
+[build-result]: https://travis-ci.org/hansroland/CoreLang
+
 This repository contains my code from the book
 
     Simon L. Peyton Jones, David Lester
